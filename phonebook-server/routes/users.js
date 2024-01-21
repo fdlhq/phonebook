@@ -1,34 +1,50 @@
 var express = require('express');
 var router = express.Router();
 const models = require('../models')
+const { Op } = require("sequelize");
 const fs = require('fs')
 const path = require('path')
 
 
 router.get('/', async function(req, res, next) {
-  try {
-    const users = await models.User.findAll();
-    res.json(users)
-  } catch (err) {
-    console.log(err)
-    res.json({err})
-  }
+  const { page = 1, limit = 5, keyword = '', sort = 'ASC' } = req.query
+  try {    
+    const { count, rows} = await models.User.findAndCountAll({
+      where:  {
+        [Op.or]: [
+          { name: { [Op.iLike]: `%${keyword}%`}},
+          { phone: { [Op.like]: `%${keyword}%`}}
+        ]
+      },
+      order: [['name', sort]],
+      limit,
+      offset: (page - 1) * limit
+    });
+    const pages = Math.ceil(count / limit)
+    res.status(200).json({ User: rows, page, limit, pages, total: count })
+    } catch (err) {
+        res.status(500).json(err)
+    }
 });
 
 router.post('/', async function(req, res, next) {
   try {
     const { name, phone } =  req.body
-    const user = await models.User.create({ name, phone });
-    res.json(user)
-  } catch (err) {
-    console.log(err)
-    res.json({err})
-  }
+    if(!name && !phone) throw Error.message = "name and phone don't be empty"
+    const user = await models.User.create({ name, phone}, {
+      returning: true,
+      plain: true
+  });
+  res.status(201).json(user)
+} catch (err) {
+  res.status(500).json(err)
+}
 });
 
-router.put('/id', async function(req, res, next) {
+router.put('/:id', async function(req, res, next) {
   try {
     const { name, phone } =  req.body
+    if(!name && !phone) throw Error.message = "name and phone don't be empty"
     const user = await models.User.update({ name, phone }, {
       where: {
         id: req.params.id
@@ -36,10 +52,10 @@ router.put('/id', async function(req, res, next) {
       returning: true,
       plain: true
     });
-    res.json(user[1])
+    res.status(201).json(user[1])
   } catch (err) {
     console.log(err)
-    res.json({err})
+    res.status(500).json({err})
   }
 });
 
