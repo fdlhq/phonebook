@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 const models = require('../models')
+const fs = require('fs')
+const path = require('path')
+
 
 router.get('/', async function(req, res, next) {
   try {
@@ -53,5 +56,50 @@ router.delete('/:id', async function(req, res, next) {
     res.json({err})
   }
 });
+
+router.put('/:id/avatar', async function(req, res) {
+  let avatar;
+  let uploadPath;
+
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
+
+  avatar = req.files.avatar;
+  let fileName = Date.now() + '_' + avatar.name
+  uploadPath = path.join(__dirname, '..', 'public', 'images', fileName);
+
+  avatar.mv(uploadPath, async function(err) {
+    if (err)
+      return res.status(500).send(err);
+        try {
+            const profile = await models.User.findOne({ where: { id: req.params.id } });
+            if (profile.avatar) {
+                const filePath = path.join(__dirname, '..', 'public', 'images', profile.avatar);
+                try { fs.unlinkSync(filePath) } catch {
+                    const User = await models.User.update({ avatar: fileName }, {
+                        where: {
+                            id: req.params.id
+                        },
+                        returning: true,
+                        plain: true
+                    });
+                    return res.status(201).json(User[1])
+                }
+            }
+            const User = await models.User.update({ avatar: fileName }, {
+              where: {
+                  id: req.params.id
+              },
+              returning: true,
+              plain: true
+          });
+          res.status(201).json(User[1])
+      } catch (err) {
+          console.log(err)
+          res.status(500).json(err)
+        }
+      });
+  });
 
 module.exports = router;
