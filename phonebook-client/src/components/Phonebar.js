@@ -1,38 +1,71 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowDownZA, faArrowUpZA, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faArrowDownZA,
+  faArrowUpZA,
+  faUserPlus,
+} from "@fortawesome/free-solid-svg-icons";
 
+const ButtonSortAsc = ({ sort, setSort }) => {
+  return (
+    <>
+      <button className="btnSortAsc">
+        <FontAwesomeIcon
+          icon={faArrowDownZA}
+          onClick={() => {
+            setSort("desc");
+          }}
+        />
+      </button>
+    </>
+  );
+};
 
-const ButtonSortAsc = () => {
-    return( <>
-        <button className='btnSortAsc'><FontAwesomeIcon icon={faArrowDownZA}/></button>
-        </>)
-}
-
-const ButtonSortDesc = () => {
-    return( <>
-        <button className='btnSortDesc'><FontAwesomeIcon icon={faArrowUpZA}/></button>
-        </>)
-}
+const ButtonSortDesc = ({ sort, setSort }) => {
+  return (
+    <>
+      <button className="btnSortDesc">
+        <FontAwesomeIcon
+          icon={faArrowUpZA}
+          onClick={() => {
+            setSort("asc");
+          }}
+        />
+      </button>
+    </>
+  );
+};
 
 const ButtonAdd = () => {
-    return(
-        <button className='btnAddName'>
-            <FontAwesomeIcon icon={faUserPlus}/>
-        </button>
-    )
-}
+  return (
+    <button className="btnAddName">
+      <FontAwesomeIcon icon={faUserPlus} />
+    </button>
+  );
+};
 
+export default function Phonebar({ keyword, setKeyword, sort, setSort }) {
+  const search = (event) => {
+    const { value } = event.target;
+    setKeyword(value);
+  };
 
-export default function Phonebar(){
-    return (
-        <div className='container-phonebar'>
-            <div className='container-form'>
-        <ButtonSortAsc/>
-        <input className='input-form' placeholder='cari nama kamu'/>
-        <ButtonAdd/>
-        </div>
-        </div>
-        
-        
-    )
+  return (
+    <div className="container-phonebar">
+      <div className="container-form">
+        {sort === "asc" || sort.sort == "asc" ? (
+          <ButtonSortAsc sort={sort} setSort={setSort} />
+        ) : (
+          <ButtonSortDesc sort={sort} setSort={setSort} />
+        )}
+        <input
+          className="input-form"
+          value={keyword}
+          placeholder="cari nama kamu"
+          onInput={search}
+          id="findbar"
+        />
+        <ButtonAdd />
+      </div>
+    </div>
+  );
 }
