@@ -52,7 +52,7 @@ export default function Phonebar({ keyword, setKeyword, sort, setSort }) {
   return (
     <div className="container-phonebar">
       <div className="container-form">
-        {sort === "asc" || sort.sort == "asc" ? (
+        {sort == "asc" || sort.sort == "asc" ? (
           <ButtonSortAsc sort={sort} setSort={setSort} />
         ) : (
           <ButtonSortDesc sort={sort} setSort={setSort} />
@@ -60,7 +60,7 @@ export default function Phonebar({ keyword, setKeyword, sort, setSort }) {
         <input
           className="input-form"
           value={keyword}
-          placeholder="cari nama kamu"
+          placeholder="Search"
           onInput={search}
           id="findbar"
         />
