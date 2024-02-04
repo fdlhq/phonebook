@@ -1,16 +1,11 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Outlet,
-  Link,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
 import Phonebox from "./components/Phonebox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import Phoneadd from "./components/Phoneadd";
 
 function App() {
   const [user, setUser] = useState({ name: "", phone: "" });
@@ -72,9 +67,19 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout />} />
         <Route
-          index
+          path="/add"
+          element={
+            <Phoneadd
+              user={user}
+              setUser={setUser}
+              item={item}
+              setItem={setItem}
+            />
+          }
+        />
+        <Route
+          path="/"
           element={
             <Phonebox
               updateData={updateData}
@@ -92,10 +97,6 @@ function App() {
       </Routes>
     </Router>
   );
-
-  function Layout() {
-    return <Outlet />;
-  }
 
   function NoMatch() {
     return (

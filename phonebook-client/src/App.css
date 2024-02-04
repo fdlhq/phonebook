@@ -21,6 +21,27 @@
 
 .container-form {
   display: flex;
+  justify-content: center;
+  padding: 5px;
+
+}
+
+.container-add {
+  display: flex;
+  width: 70%;
+  flex-direction: column;
+  margin: 15px 0px 0px 0px;
+}
+
+.input-add {
+  margin: 5px 0px;
+  border: 1px solid black;
+  height: 30px;
+  border-radius: 3px;
+}
+
+.container-form {
+  display: flex;
 }
 
 .btnSortAsc {

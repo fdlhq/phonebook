@@ -4,6 +4,7 @@ import {
   faArrowUpZA,
   faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
 const ButtonSortAsc = ({ sort, setSort }) => {
   return (
@@ -35,15 +36,13 @@ const ButtonSortDesc = ({ sort, setSort }) => {
   );
 };
 
-const ButtonAdd = () => {
-  return (
-    <button className="btnAddName">
-      <FontAwesomeIcon icon={faUserPlus} />
-    </button>
-  );
-};
+// const ButtonAdd = (navigate) => {
+//   return (
+
+// };
 
 export default function Phonebar({ keyword, setKeyword, sort, setSort }) {
+  const navigate = useNavigate();
   const search = (event) => {
     const { value } = event.target;
     setKeyword(value);
@@ -64,7 +63,9 @@ export default function Phonebar({ keyword, setKeyword, sort, setSort }) {
           onInput={search}
           id="findbar"
         />
-        <ButtonAdd />
+        <button className="btnAddName" onClick={() => navigate("/add")}>
+          <FontAwesomeIcon icon={faUserPlus} />
+        </button>
       </div>
     </div>
   );
