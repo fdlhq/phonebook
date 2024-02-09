@@ -11,9 +11,8 @@ export default function Phonebox({
   user,
   setUser,
   updateData,
+  deleteData,
 }) {
-
-  
   return (
     <div className="container">
       <div className="header">
@@ -27,6 +26,7 @@ export default function Phonebox({
       <div className="body">
         <Phonelist
           updateData={updateData}
+          deleteData={deleteData}
           setItem={setItem}
           item={item}
           user={user}

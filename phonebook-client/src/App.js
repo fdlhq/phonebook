@@ -13,6 +13,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [sort, setSort] = useState("asc");
+  const [totalPages, setTotalPages] = useState(1);
 
   const readData = async () => {
     try {
@@ -22,10 +23,10 @@ function App() {
           sort,
         },
       });
-      const { phonebook } = await response.data;
+      const { phonebook, pages } = await response.data;
       if (phonebook) {
         setItem(phonebook);
-        // setTotalPages(pages)
+        setTotalPages(pages);
       }
       return;
     } catch (error) {
@@ -64,6 +65,15 @@ function App() {
       });
   };
 
+  function deleteData(id) {
+    axios
+      .delete(`http://localhost:3000/users/${id}`)
+      .then((response) => {
+        setItem(item.filter((data) => data.id !== id));
+      })
+      .catch((err) => console.log("error Delete", err));
+  }
+
   return (
     <Router>
       <Routes>
@@ -75,6 +85,8 @@ function App() {
               setUser={setUser}
               item={item}
               setItem={setItem}
+              sort={sort}
+              setSort={setSort}
             />
           }
         />
@@ -82,6 +94,7 @@ function App() {
           path="/"
           element={
             <Phonebox
+              deleteData={deleteData}
               updateData={updateData}
               setItem={setItem}
               user={user}

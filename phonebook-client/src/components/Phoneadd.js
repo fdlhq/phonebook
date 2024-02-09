@@ -2,8 +2,15 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Phoneadd(item, setItem, user, setUser) {
-  const navigate = useNavigate();
+export default function Phoneadd({
+  item,
+  setItem,
+  user,
+  setUser,
+  sort,
+  setSort,
+}) {
+  let navigate = useNavigate();
   const addData = () => {
     axios
       .post("http://localhost:3000/users", {
@@ -35,17 +42,23 @@ export default function Phoneadd(item, setItem, user, setUser) {
   return (
     <form className="container-form" onSubmit={addData}>
       <div className="container-add">
-        <input className="input-add"
+        <input
+          className="input-add"
           type="text"
           onChange={(e) => setDataku({ ...dataku, name: e.target.value })}
         />
         <input
-          type="text" className="input-add"
+          type="text"
+          className="input-add"
           onChange={(e) => setDataku({ ...dataku, phone: e.target.value })}
         />
-        <div>
-          <button type="submit">save</button>
-          <button onClick={() => navigate("/")}>cancel</button>
+        <div className="btn-item-add">
+          <button className="btn-save" type="submit">
+            save
+          </button>
+          <button className="btn-cancel" onClick={() => navigate("/")}>
+            cancel
+          </button>
         </div>
       </div>
     </form>

@@ -6,8 +6,25 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
-export default function Phoneitem({ user, updateData }) {
+export default function Phoneitem({ user, updateData, deleteData }) {
+  const submitDelete = (user) => {
+    confirmAlert({
+      title: "CONFIRM TO DELETE",
+      message: `Are you sure to delete this contact ${user.name}`,
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => deleteData(user.id),
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
+  };
   const [onEdit, setOnEdit] = useState(false);
   const [newData, setNewData] = useState({
     name: user.name,
@@ -96,7 +113,7 @@ export default function Phoneitem({ user, updateData }) {
               >
                 <FontAwesomeIcon icon={faPenToSquare} />
               </button>
-              <button>
+              <button onClick={() => submitDelete(user)}>
                 <FontAwesomeIcon icon={faTrashCan} />
               </button>
             </div>
