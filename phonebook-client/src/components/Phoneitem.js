@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import { Link } from "react-router-dom";
 
 export default function Phoneitem({ user, updateData, deleteData }) {
   const submitDelete = (user) => {
@@ -36,12 +37,16 @@ export default function Phoneitem({ user, updateData, deleteData }) {
         <div className="content-item">
           <div className="content-avatar">
             <div className="content-avatar-img">
-              <img
-                src={
-                  "http://localhost:3000/images/" +
-                  (user.avatar == null ? "ava-default.jpeg" : `${user.avatar}`)
-                }
-              />
+              <Link to={`/${user.id}/avatar`}>
+                <img
+                  src={
+                    "http://localhost:3000/images/" +
+                    (user.avatar == null
+                      ? "ava-default.jpeg"
+                      : `${user.avatar}`)
+                  }
+                />
+              </Link>
             </div>
           </div>
           <div className="body-item">
@@ -92,12 +97,16 @@ export default function Phoneitem({ user, updateData, deleteData }) {
         <div className="content-item">
           <div className="content-avatar">
             <div className="content-avatar-img">
-              <img
-                src={
-                  "http://localhost:3000/images/" +
-                  (user.avatar == null ? "ava-default.jpeg" : `${user.avatar}`)
-                }
-              />
+              <Link to={`/${user.id}/avatar`}>
+                <img
+                  src={
+                    "http://localhost:3000/images/" +
+                    (user.avatar == null
+                      ? "ava-default.jpeg"
+                      : `${user.avatar}`)
+                  }
+                />
+              </Link>
             </div>
           </div>
           <div className="body-item">

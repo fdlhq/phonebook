@@ -26,6 +26,19 @@ router.get("/", async function (req, res, next) {
   }
 });
 
+router.get("/:id", async function (req, res) {
+  try {
+    const id = req.params.id;
+    const user = await models.User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
+    }
+    res.status(200).json(user);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 router.post("/", async function (req, res, next) {
   try {
     const { name, phone } = req.body;

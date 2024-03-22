@@ -45,10 +45,12 @@ export default function Phoneadd({
         <input
           className="input-add"
           type="text"
+          required
           onChange={(e) => setDataku({ ...dataku, name: e.target.value })}
         />
         <input
           type="text"
+          required
           className="input-add"
           onChange={(e) => setDataku({ ...dataku, phone: e.target.value })}
         />

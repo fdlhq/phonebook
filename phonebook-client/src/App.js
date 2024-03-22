@@ -1,42 +1,42 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
 import Phonebox from "./components/Phonebox";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import Phoneadd from "./components/Phoneadd";
+import Phoneavatar from "./components/Phoneavatar";
 
 function App() {
   const [user, setUser] = useState({ name: "", phone: "" });
   const [item, setItem] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [sort, setSort] = useState("asc");
+  const [avatar, setAvatar] = useState(null);
+  const formData = new FormData();
+  const [isLoading, setIsLoading] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
 
-  const readData = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/users", {
-        params: {
-          keyword,
-          sort,
-        },
-      });
-      const { phonebook, pages } = await response.data;
-      if (phonebook) {
-        setItem(phonebook);
-        setTotalPages(pages);
-      }
-      return;
-    } catch (error) {
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const readData = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/users", {
+          params: {
+            keyword,
+            sort,
+          },
+        });
+        const { phonebook, pages } = await response.data;
+        if (phonebook) {
+          setItem(phonebook);
+          setTotalPages(pages);
+        }
+        return;
+      } catch (error) {
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
+    };
     readData();
   }, [keyword, sort]);
 
@@ -74,6 +74,32 @@ function App() {
       .catch((err) => console.log("error Delete", err));
   }
 
+  const updateAvatar = (id, avatar) => {
+    formData.append("avatar", avatar);
+    axios
+      .put(`http://localhost:3000/users/${id}/avatar`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        setItem((prevData) => {
+          return [
+            ...prevData.filter((data) => data.id !== response.data.id),
+            {
+              id: response.data.id,
+              name: response.data.name,
+              phone: response.data.phone,
+              avatar: response.data.avatar,
+            },
+          ];
+        });
+      })
+      .catch((err) => {
+        console.log("ini error update avatar", err);
+      });
+  };
+
   return (
     <Router>
       <Routes>
@@ -107,23 +133,21 @@ function App() {
             />
           }
         />
+        <Route
+          path="/:id/avatar"
+          element={
+            <Phoneavatar
+              updateAvatar={updateAvatar}
+              user={user}
+              avatar={avatar}
+              setAvatar={setAvatar}
+              item={item}
+            />
+          }
+        />
       </Routes>
     </Router>
   );
-
-  function NoMatch() {
-    return (
-      <div className="nomatch">
-        <h2>Nothing to see here!</h2>
-        <h1>
-          <FontAwesomeIcon icon={faArrowDown} />
-        </h1>
-        <p>
-          <Link to="/">Go to the home page</Link>
-        </p>
-      </div>
-    );
-  }
 }
 
 export default App;
